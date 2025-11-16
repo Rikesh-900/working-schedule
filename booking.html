@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Weekly Work Schedule</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  .calendar {
+    display: grid;
+    grid-template-columns: 120px repeat(7, 1fr);
+    border: 1px solid #ccc;
+  }
+  .day-header {
+    padding: 10px;
+    background: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    font-weight: bold;
+  }
+  .time-row {
+    display: contents;
+  }
+  .time-label {
+    padding: 10px;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #eee;
+  }
+  .slot {
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+    position: relative;
+    height: 40px;
+  }
+  .work-block {
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    background: #4CAF50;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  .break-block {
+    background: #FFC107;
+  }
+</style>
+</head>
+<body>
+<h2>Weekly Work Schedule</h2>
+<div class="calendar" id="calendar"></div>
+
+<script>
+// Days
+const days = ["Time", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+// Generate time labels (4 AM to 11 PM)
+const hours = [];
+for (let h = 4; h <= 23; h++) {
+    const suffix = h >= 12 ? 'PM' : 'AM';
+    const display = ((h + 11) % 12 + 1) + suffix;
+    hours.push({ hour: h, label: display });
+}
+
+// Work schedule blocks
+const schedule = {
+  Sunday: [
+    { start: 8, end: 12, label: "Work" },
+    { start: 13, end: 17, label: "Work" }
+  ],
+  Monday: [
+    { start: 4, end: 8, label: "Work" },
+    { start: 19, end: 23, label: "Work" }
+  ],
+  Tuesday: [
+    { start: 8, end: 12, label: "Work" },
+    { start: 13, end: 17, label: "Work" }
+  ],
+  Wednesday: [
+    { start: 8, end: 12, label: "Work" },
+    { start: 13, end: 17, label: "Work" }
+  ],
+  Thursday: [
+    { start: 8, end: 12, label: "Work" },
+    { start: 13, end: 17, label: "Work" }
+  ],
+  Friday: [
+    { start: 4, end: 8, label: "Work" }
+  ]
+};
+
+const calendar = document.getElementById("calendar");
+
+// Headers
+days.forEach(day => {
+  const div = document.createElement("div");
+  div.className = "day-header";
+  div.textContent = day;
+  calendar.appendChild(div);
+});
+
+// Rows
+hours.forEach(t => {
+  // time label
+  const timeDiv = document.createElement("div");
+  timeDiv.className = "time-label";
+  timeDiv.textContent = t.label;
+  calendar.appendChild(timeDiv);
+
+  // each day column
+  days.slice(1).forEach(day => {
+    const slot = document.createElement("div");
+    slot.className = "slot";
+
+    // check if work block exists
+    if (schedule[day]) {
+      schedule[day].forEach(block => {
+        if (t.hour >= block.start && t.hour < block.end) {
+          const blockDiv = document.createElement("div");
+          blockDiv.className = "work-block";
+          blockDiv.textContent = block.label;
+          slot.appendChild(blockDiv);
+        }
+      });
+    }
+
+    calendar.appendChild(slot);
+  });
+});
+</script>
+</body>
+</html>
